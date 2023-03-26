@@ -1,8 +1,8 @@
 import { RootController } from '@src/controller';
 import { CONFIG, VERSION } from '@src/config';
-import { BLOCK, PROCESSOR, RAM, STARTING_BLOCK, stateStart, TXIDUtils } from '@src/utils';
+import { BLOCK, Owners, PLASMA, PROCCESS_STATE, PROCESSOR, RAM, STARTING_BLOCK, stateStart, TXIDUtils } from '@src/utils';
 import { IpfsService } from '@src/services';
-import { store } from '..';
+import { client, ipfs, store } from '..';
 import { Hive } from '.';
 
 const {
@@ -149,13 +149,23 @@ const AppStart = () => {
   };
 
   const startApp = () => {
+    Owners.init();
+    TXIDUtils.blocknumber = 0
+    if (CONFIG.ipfshost == 'ipfs') ipfs.id((err: any, res: any) => {
+      if (err) { }
+      if (res) PLASMA.id = res.id
+    })
 
+    // PROCCESS_STATE.processor = hiveState(client, STARTING_BLOCK.startingBlock, CONFIG.prefix, CONFIG.username);
+    // PROCCESS_STATE.processor.on('send', HR.send);
+    // PROCCESS_STATE.processor.on('claim', HR.claim);
+    // PROCCESS_STATE.processor.on('node_add', HR.node_add);
   }
 
   const exitApp = (consensus: number, reason: string) => {
     console.log(`Restarting with ${consensus}. Reason: ${reason}`);
 
-    if (PROCESSOR) PROCESSOR.stop(function () { });
+    if (PROCCESS_STATE.processor) PROCCESS_STATE.processor.stop(function () { });
 
     if (consensus) {
       startWith(consensus as unknown as string, true);

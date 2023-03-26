@@ -127,7 +127,7 @@ const User = () => {
     });
   };
 
-  return { user };
+  return { user, getPathObj };
 };
 
 export default User;

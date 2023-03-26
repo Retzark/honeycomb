@@ -1,11 +1,14 @@
-import { BlockArgs, PlasmaArgs, RamArgs, StartingBlockArgs } from 'types';
+import { HiveService, UserService } from '@src/services';
+import { BlockArgs, PlasmaArgs, ProcessArgs, RamArgs, StartingBlockArgs } from 'types';
 import { store } from '..';
 
 const status: any = {
   cleaner: [],
 };
 
-export const PROCESSOR: any = ''
+export let PROCCESS_STATE: ProcessArgs = {
+  processor: ''
+}
 
 export const arrToObjUtils = (arr: any) => {
   const obj: any = {};
@@ -50,6 +53,7 @@ export const TXIDUtils = {
 };
 
 export const PLASMA: PlasmaArgs = {
+  id: 0,
   consensus: '',
   pending: {},
   page: [],
@@ -87,4 +91,45 @@ export const unwrapOps = (arr: any) => {
       }
     }
   });
+};
+
+let owners: any = {};
+
+export const Owners = {
+  is: (acc: string) => {
+    if (owners[acc]) return 1;
+    else return 0;
+  },
+  activeUpdate: (acc: string, key: any) => {
+    delete owners[owners[acc]];
+    owners[acc].key = key;
+  },
+  getKey: (acc: string) => {
+    return owners[acc]?.key;
+  },
+  getAKey: (i = 0) => {
+    return owners[Object.keys(owners)[i]]?.key;
+  },
+  numKeys: () => {
+    return Object.keys(owners).length;
+  },
+  init: () => {
+    const { getPathObj } = UserService();
+    const { fetchAccounts } = HiveService();
+
+    getPathObj(['stats', 'ms', 'active_account_auths']).then((auths: any) => {
+      const q: string[] = [];
+
+      for (const key in auths) {
+        q.push(key);
+      }
+
+      fetchAccounts(q).then((r: any) => {
+        owners = {};
+        for (let i = 0; i < r.length; i++) {
+          owners[r[i].name] = { key: r[i].active.key_auths[0][0] };
+        }
+      });
+    });
+  },
 };

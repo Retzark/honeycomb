@@ -14,6 +14,7 @@ export type RamArgs = {
 };
 
 export type PlasmaArgs = {
+  id?: number;
   consensus: string;
   pending: object;
   page: any;
@@ -39,4 +40,8 @@ export type UserResponse = {
   power_downs: any;
   gov: any;
   tick: string;
+}
+
+export type ProcessArgs = {
+  processor: any;
 }

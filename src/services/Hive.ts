@@ -5,7 +5,7 @@ import { AppStart } from '@src/application';
 
 const Hive = () => {
   const fetchHive = async () => {
-    const { exitApp } = AppStart()
+    const { exitApp } = AppStart();
     if (RAM.lastUpdate < Date.now() - 59000) {
       const response = await fetch(CONFIG.clientURL, {
         method: 'POST',
@@ -25,17 +25,20 @@ const Hive = () => {
           data.result.head_block_number - (TXIDUtils.getBlockNum() || 0);
 
         if (RAM.behind > 100 && TXIDUtils.streaming) {
-          exitApp(8, 'Stream lag')
+          exitApp(8, 'Stream lag');
         }
         setTimeout(function () {
-          fetchHive()
+          fetchHive();
         }, 60000);
       }
     }
   };
 
+  const fetchAccounts = async (account: string | string[]) => { };
+
   return {
     fetchHive,
+    fetchAccounts,
   };
 };
 
