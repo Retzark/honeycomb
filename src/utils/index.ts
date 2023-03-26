@@ -9,4 +9,5 @@ export {
   PLASMA,
   unwrapOps,
 } from './helperUtils';
-export { stateStart } from "./State"
+export { Base64Utils } from './base64Utils';
+export { stateStart } from './State';

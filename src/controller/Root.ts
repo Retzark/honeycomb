@@ -15,7 +15,7 @@ const Root = () => {
     }
   };
 
-  const Root = async (_req: Request, res: Response) => {
+  const getRoot = async (_req: Request, res: Response) => {
     try {
       res.setHeader('Content-Type', 'application/json');
 
@@ -41,7 +41,7 @@ const Root = () => {
     }
   };
 
-  return { Start, Root };
+  return { Start, getRoot };
 };
 
 export default Root;
