@@ -1,6 +1,6 @@
 import { RootController } from '@src/controller';
 import { CONFIG, VERSION } from '@src/config';
-import { BLOCK, Owners, PLASMA, PROCCESS_STATE, PROCESSOR, RAM, STARTING_BLOCK, stateStart, TXIDUtils } from '@src/utils';
+import { BLOCK, Owners, PLASMA, PROCCESS_STATE, RAM, STARTING_BLOCK, stateStart, TXIDUtils } from '@src/utils';
 import { IpfsService } from '@src/services';
 import { client, ipfs, store } from '..';
 import { Hive } from '.';
