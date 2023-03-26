@@ -25,3 +25,18 @@ export type PlasmaArgs = {
 export type StartingBlockArgs = {
   startingBlock: number;
 }
+
+export type UserResponse = {
+  balance: number;
+  claim: number;
+  poweredUp: number;
+  granted: any;
+  granting: any;
+  heldCollateral: number;
+  contracts: any;
+  up: any;
+  down: any;
+  power_downs: any;
+  gov: any;
+  tick: string;
+}
