@@ -2,8 +2,11 @@ import { Request } from 'express';
 import { CONFIG } from '@src/config';
 import { store } from 'src';
 import { RAM } from '@src/utils';
+import { PathService } from '.';
 
 const User = () => {
+  const { getPathObj } = PathService();
+
   const user = (req: Request) => {
     let un = req.params.un,
       bal = getPathNum(['balances', un]),
@@ -114,20 +117,7 @@ const User = () => {
     });
   };
 
-  const getPathObj = (path: string[]) => {
-    return new Promise(function (resolve, reject) {
-      store.get(path, function (err, obj) {
-        if (err) {
-          console.log(path);
-          resolve({});
-        } else {
-          resolve(obj);
-        }
-      });
-    });
-  };
-
-  return { user, getPathObj };
+  return { user };
 };
 
 export default User;

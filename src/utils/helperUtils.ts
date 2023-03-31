@@ -1,5 +1,11 @@
-import { HiveService, UserService } from '@src/services';
-import { BlockArgs, PlasmaArgs, ProcessArgs, RamArgs, StartingBlockArgs } from 'types';
+import { HiveService, PathService } from '@src/services';
+import {
+  BlockArgs,
+  PlasmaArgs,
+  ProcessArgs,
+  RamArgs,
+  StartingBlockArgs,
+} from 'types';
 import { store } from '..';
 
 const status: any = {
@@ -7,8 +13,8 @@ const status: any = {
 };
 
 export let PROCCESS_STATE: ProcessArgs = {
-  processor: ''
-}
+  processor: '',
+};
 
 export const arrToObjUtils = (arr: any) => {
   const obj: any = {};
@@ -114,7 +120,7 @@ export const Owners = {
     return Object.keys(owners).length;
   },
   init: () => {
-    const { getPathObj } = UserService();
+    const { getPathObj } = PathService();
     const { fetchAccounts } = HiveService();
 
     getPathObj(['stats', 'ms', 'active_account_auths']).then((auths: any) => {

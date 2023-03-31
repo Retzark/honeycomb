@@ -25,7 +25,7 @@ export type PlasmaArgs = {
 
 export type StartingBlockArgs = {
   startingBlock: number;
-}
+};
 
 export type UserResponse = {
   balance: number;
@@ -40,8 +40,8 @@ export type UserResponse = {
   power_downs: any;
   gov: any;
   tick: string;
-}
+};
 
 export type ProcessArgs = {
   processor: any;
-}
+};
