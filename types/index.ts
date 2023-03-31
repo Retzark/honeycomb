@@ -10,7 +10,7 @@ export type RamArgs = {
   Hive: string;
   behind: number;
   head: number;
-  hiveDyn: object;
+  hiveDyn: any;
 };
 
 export type PlasmaArgs = {

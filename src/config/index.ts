@@ -33,15 +33,15 @@ const ipfshost: string = ENV.ipfshost || 'ipfs.infura.io'; //IPFS upload/downloa
 const ipfsport: string = ENV.ipfsport || '5001'; //IPFS upload/download provider provider
 const ipfsprotocol: string = ENV.ipfsprotocol || 'https'; //IPFS upload/download protocol
 const ipfsLinks = ENV.ipfsLinks
-  ? ENV.ipfsLinks.split(" ")
+  ? ENV.ipfsLinks.split(' ')
   : [
-    "https://ipfs:8080/ipfs/",
-    "http://localhost:8080/ipfs/",
-    "https://ipfs.3speak.tv/ipfs/",
-    "https://infura-ipfs.io/ipfs/",
-    "https://ipfs.alloyxuast.co.uk/ipfs/",
-    "https://ipfs1.alloyxuast.tk/ipfs/"
-  ];
+      'https://ipfs:8080/ipfs/',
+      'http://localhost:8080/ipfs/',
+      'https://ipfs.3speak.tv/ipfs/',
+      'https://infura-ipfs.io/ipfs/',
+      'https://ipfs.alloyxuast.co.uk/ipfs/',
+      'https://ipfs1.alloyxuast.tk/ipfs/',
+    ];
 
 const startURL: string = ENV.STARTURL || 'https://api.deathwing.me/';
 const clientURL: string = ENV.APIURL || 'https://api.deathwing.me/';
@@ -77,6 +77,17 @@ const mainIPFS: string = 'a.ipfs.dlux.io'; //IPFS service
 const mainICO: string = 'robotolux'; //Account collecting ICO HIVE
 const footer: string = `\n[Find us on Discord](https://discord.gg/Beeb38j)`;
 const hive_service_fee: number = 100; //HIVE service fee for transactions in Hive/HBD in centipercents (1% = 100)
+
+const detail = {
+  name: 'Decentralized Limitless User eXperiences',
+  symbol: TOKEN,
+  icon: 'https://www.dlux.io/img/dlux-hive-logo-alpha.svg',
+  supply: '5% Fixed Inflation, No Cap.',
+  wp: `https://docs.google.com/document/d/1_jHIJsX0BRa5ujX0s-CQg3UoQC2CBW4wooP2lSSh3n0/edit?usp=sharing`,
+  ws: `https://www.dlux.io`,
+  be: `https://hiveblockexplorer.com/`,
+  text: `DLUX is a Web3.0 technology that is focused on providing distribution of eXtended (Virtual and Augmented) Reality. It supports any browser based applications that can be statically delivered through IPFS. The DLUX Token Architecture is Proof of Stake as a layer 2 technology on the HIVE blockchain to take advantage of free transactions. With the first WYSIWYG VR Builder of any blockchain environment and the first Decentralized Exchange on the Hive Blockchain, DLUX is committed to breaking any boundaries for adoption of world changing technologies.`,
+};
 
 const CONFIG = {
   username,
@@ -129,6 +140,7 @@ const CONFIG = {
   mainICO,
   footer,
   hive_service_fee,
+  detail,
 };
 
 export { VERSION, CONFIG };
