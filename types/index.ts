@@ -45,3 +45,22 @@ export type UserResponse = {
 export type ProcessArgs = {
   processor: any;
 };
+
+export type DexInfoArgs = {
+  hive: {
+    low: number;
+    bv: string;
+    tv: string;
+    high: number;
+    bid: number;
+    ask: number;
+  };
+  hbd: {
+    low: number;
+    high: number;
+    bv: number;
+    tv: number;
+    bid: number;
+    ask: number;
+  };
+};

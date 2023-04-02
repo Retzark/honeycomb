@@ -89,6 +89,87 @@ const detail = {
   text: `DLUX is a Web3.0 technology that is focused on providing distribution of eXtended (Virtual and Augmented) Reality. It supports any browser based applications that can be statically delivered through IPFS. The DLUX Token Architecture is Proof of Stake as a layer 2 technology on the HIVE blockchain to take advantage of free transactions. With the first WYSIWYG VR Builder of any blockchain environment and the first Decentralized Exchange on the Hive Blockchain, DLUX is committed to breaking any boundaries for adoption of world changing technologies.`,
 };
 
+const featuresModel = {
+  claim_id: 'claim',
+  claim_S: 'Airdrop',
+  claim_B: false,
+  claim_json: 'drop',
+  rewards_id: 'claim',
+  rewards_S: 'Rewards',
+  rewards_B: true,
+  rewards_json: 'claim',
+  rewardSel: true,
+  reward2Gov: true,
+  send_id: 'send',
+  send_S: 'Send',
+  send_B: true,
+  send_json: 'send',
+  powup_id: 'power_up',
+  powup_B: true,
+  pow_val: '',
+  powdn_id: 'power_down',
+  powdn_B: true,
+  powsel_up: true,
+  govup_id: 'gov_up',
+  govup_B: true,
+  gov_val: '',
+  govsel_up: true,
+  govdn_id: 'gov_down',
+  govdn_B: true,
+  node: {
+    id: 'node_add',
+    opts: [
+      {
+        S: 'Domain',
+        type: 'text',
+        info: 'https://no-trailing-slash.com',
+        json: 'domain',
+        val: '',
+      },
+      {
+        S: 'DEX Fee Vote',
+        type: 'number',
+        info: '500 = .5%',
+        max: 1000,
+        min: 0,
+        json: 'bidRate',
+        val: '',
+      },
+      {
+        S: 'DEX Max Vote',
+        type: 'number',
+        info: '10000 = 100%',
+        max: 10000,
+        min: 0,
+        json: 'dm',
+        val: '',
+      },
+      {
+        S: 'DEX Slope Vote',
+        type: 'number',
+        info: '10000 = 100%',
+        max: 10000,
+        min: 0,
+        json: 'ds',
+        val: '',
+      },
+    ],
+  },
+};
+
+const features = {
+  pob: true, //proof of brain
+  delegate: true, //delegation
+  daily: true, // daily post
+  liquidity: true, //liquidity
+  ico: true, //ico
+  inflation: true,
+  dex: true, //dex
+  nft: true, //nfts
+  state: true, //api dumps
+  claimdrop: false, //claim drops
+};
+
 const CONFIG = {
   username,
   active,
@@ -141,6 +222,8 @@ const CONFIG = {
   footer,
   hive_service_fee,
   detail,
+  featuresModel,
+  features,
 };
 
 export { VERSION, CONFIG };

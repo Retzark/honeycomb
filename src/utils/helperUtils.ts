@@ -8,7 +8,7 @@ import {
 } from 'types';
 import { store } from '..';
 
-const status: any = {
+export const status: any = {
   cleaner: [],
 };
 

@@ -6,6 +6,9 @@ import Markets from './markets';
 import Report from './report';
 import FeedAPI from './feed';
 import QueueAPI from './queue';
+import ProtocolAPI from './protocol';
+import StatusAPI from './status';
+import DexAPI from './dex';
 
 const api = express();
 
@@ -16,5 +19,8 @@ api.use('/markets', Markets);
 api.use('/report', Report);
 api.use('/feed', FeedAPI);
 api.use('/queue', QueueAPI);
+api.use('/protocol', ProtocolAPI);
+api.use('/status', StatusAPI);
+api.use('/dex', DexAPI);
 
 export default api;

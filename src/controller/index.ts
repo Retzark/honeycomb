@@ -5,3 +5,6 @@ export { default as MarketsController } from './Markets';
 export { default as ReportController } from './Report';
 export { default as FeedController } from './Feed';
 export { default as QueueController } from './Queue';
+export { default as ProtocolController } from './Protocol';
+export { default as StatusController } from './Status';
+export { default as DexController } from './Dex';

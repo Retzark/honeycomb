@@ -8,7 +8,9 @@ export {
   STARTING_BLOCK,
   PLASMA,
   unwrapOps,
-  Owners
+  Owners,
+  status,
 } from './helperUtils';
 export { Base64Utils } from './base64Utils';
 export { stateStart } from './State';
+export { default as authUtils } from './authUtils';
