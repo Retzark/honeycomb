@@ -1,10 +1,41 @@
 import { Request, Response } from 'express';
 import { CONFIG, VERSION } from '@src/config';
-import { RAM } from '@src/utils';
 import { PathService } from '@src/services';
+import { RAM } from '@src/utils';
 
 const Markets = () => {
   const { getPathObj } = PathService();
+
+  const getMarkets = async (_req: Request, res: Response) => {
+    try {
+      res.setHeader('Content-Type', 'application/json');
+
+      const markets = getPathObj(['markets']);
+      const stats = getPathObj(['stats']);
+
+      Promise.all([markets, stats])
+        .then((v) => {
+          res.send(
+            JSON.stringify(
+              {
+                markets: v[0],
+                stats: v[1],
+                node: CONFIG.username,
+                behind: RAM.behind,
+                VERSION,
+              },
+              null,
+              3
+            )
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (error) {
+      console.log('Error: ', error);
+    }
+  };
 
   const getMirrors = async (_req: Request, res: Response) => {
     try {
@@ -41,7 +72,7 @@ const Markets = () => {
     }
   };
 
-  return { getMirrors };
+  return { getMarkets, getMirrors };
 };
 
 export default Markets;
