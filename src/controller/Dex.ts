@@ -6,7 +6,7 @@ import { DexInfoArgs, OrderBookArgs } from 'types';
 
 const Dex = () => {
   const { getPathObj } = PathService();
-  const { getBook } = DexService();
+  const { getBook, getHistory, getRecentChart } = DexService();
 
   const getDex = async (_req: Request, res: Response) => {
     try {
@@ -380,7 +380,129 @@ const Dex = () => {
     }
   };
 
-  return { getDex, getTickers, getOrderBook };
+  const getPairs = (_req: Request, res: Response) => {
+    try {
+      res.setHeader('Content-Type', 'application/json');
+
+      const pairs = [
+        {
+          ticker_id: `HIVE_${CONFIG.TOKEN}`,
+          base: 'HIVE',
+          target: CONFIG.TOKEN,
+        },
+        {
+          ticker_id: `HBD_${CONFIG.TOKEN}`,
+          base: 'HBD',
+          target: CONFIG.TOKEN,
+        },
+      ];
+      res.send(JSON.stringify(pairs, null, 3));
+    } catch (error) {
+      console.log('Error: ', error);
+    }
+  };
+
+  const getHistorical = async (req: Request, res: Response) => {
+    try {
+      res.setHeader('Content-Type', 'application/json');
+
+      const dex = getPathObj(['dex']);
+      const stats = getPathObj(['stats']);
+      const orderbook = {
+        timestamp: Date.now(),
+        buys: [],
+        sells: [],
+      };
+      const pair = req.params.ticker_id || req.query.ticker_id;
+      const limit = parseInt(req.query.limit as string) || 50;
+      let type = req.query.type;
+
+      switch (type) {
+        case 'buy':
+          type = ['buy'];
+          break;
+        case 'ask':
+          type = ['sell'];
+          break;
+        default:
+          type = ['buy', 'sell'];
+          break;
+      }
+
+      switch (pair) {
+        case `HIVE_${CONFIG.TOKEN}`:
+          res.send(await getHistory([dex, stats], 'hive', type, limit));
+          break;
+        case `HBD_${CONFIG.TOKEN}`:
+          res.send(await getHistory([dex, stats], 'hbd', type, limit));
+          break;
+        default:
+          res.send(
+            JSON.stringify(
+              {
+                error: 'Ticker_ID is not supported',
+                node: CONFIG.username,
+                VERSION,
+              },
+              null,
+              3
+            )
+          );
+          break;
+      }
+    } catch (error) {
+      console.log('Error: ', error);
+    }
+  };
+
+  const getRecent = async (req: Request, res: Response) => {
+    try {
+      res.setHeader('Content-Type', 'application/json');
+
+      const dex = getPathObj(['dex']);
+      const stats = getPathObj(['stats']);
+      const orderbook = {
+        timestamp: Date.now(),
+        recents: [],
+      };
+      const pair = req.params.ticker_id || req.query.ticker_id;
+      const limit = parseInt(req.query.limit as string) || 50;
+
+      switch (pair) {
+        case `HIVE_${CONFIG.TOKEN}`:
+          res.send(await getRecentChart([dex, stats], 'hive', limit));
+
+          break;
+        case `HBD_${CONFIG.TOKEN}`:
+          res.send(await getRecentChart([dex, stats], 'hbd', limit));
+          break;
+        default:
+          res.send(
+            JSON.stringify(
+              {
+                error: 'Ticker_ID is not supported',
+                node: CONFIG.username,
+                VERSION,
+              },
+              null,
+              3
+            )
+          );
+          break;
+      }
+    } catch (error) {
+      console.log('Error: ', error);
+    }
+  };
+
+  return {
+    getDex,
+    getTickers,
+    getOrderBook,
+    getPairs,
+    getHistorical,
+    getRecent,
+  };
 };
 
 export default Dex;
