@@ -64,3 +64,10 @@ export type DexInfoArgs = {
     ask: number;
   };
 };
+
+export type OrderBookArgs = {
+  timestamp: number;
+  bids: any[];
+  asks: any[];
+  ticker_id: string;
+};

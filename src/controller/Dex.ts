@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import { CONFIG, VERSION } from '@src/config';
-import { PathService } from '@src/services';
+import { DexService, PathService } from '@src/services';
 import { RAM } from '@src/utils';
-import { DexInfoArgs } from 'types';
+import { DexInfoArgs, OrderBookArgs } from 'types';
 
 const Dex = () => {
   const { getPathObj } = PathService();
+  const { getBook } = DexService();
 
   const getDex = async (_req: Request, res: Response) => {
     try {
@@ -335,7 +336,51 @@ const Dex = () => {
     }
   };
 
-  return { getDex, getTickers };
+  const getOrderBook = async (req: Request, res: Response) => {
+    try {
+      res.setHeader('Content-Type', 'application/json');
+
+      const pair = req.params.ticker_id || req.query.ticker_id;
+
+      const dex = getPathObj(['dex']);
+      const stats = getPathObj(['stats']);
+      const orderbook: OrderBookArgs = {
+        timestamp: Date.now(),
+        bids: [],
+        asks: [],
+        ticker_id: '',
+      };
+      const depth = parseInt(req.query.depth as string) || 50;
+
+      switch (pair) {
+        case `HIVE_${CONFIG.TOKEN}`:
+          orderbook.ticker_id = `HIVE_${CONFIG.TOKEN}`;
+          res.send(await getBook(depth, [dex, stats], orderbook));
+          break;
+        case `HBD_${CONFIG.TOKEN}`:
+          orderbook.ticker_id = `HBD_${CONFIG.TOKEN}`;
+          res.send(await getBook(depth, [dex, stats], orderbook));
+          break;
+        default:
+          res.send(
+            JSON.stringify(
+              {
+                ERROR: `ticker_id must be HIVE_${CONFIG.TOKEN} or HBD_${CONFIG.TOKEN}`,
+                node: CONFIG.username,
+                VERSION,
+              },
+              null,
+              3
+            )
+          );
+          break;
+      }
+    } catch (error) {
+      console.log('Error: ', error);
+    }
+  };
+
+  return { getDex, getTickers, getOrderBook };
 };
 
 export default Dex;
