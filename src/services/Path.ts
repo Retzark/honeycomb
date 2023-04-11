@@ -2,8 +2,8 @@ import { store } from 'src';
 
 const Path = () => {
   const getPathNum = (path: string[]) => {
-    return new Promise(function (resolve, reject) {
-      store.get(path, function (err, obj) {
+    return new Promise((resolve, reject) => {
+      store.get(path, (err, obj) => {
         if (err) {
           reject(err);
         } else {
@@ -18,11 +18,10 @@ const Path = () => {
   };
 
   const getPathObj = (path: string[]) => {
-    return new Promise(function (resolve, reject) {
-      store.get(path, function (err, obj) {
+    return new Promise((resolve, _reject) => {
+      store.get(path, (err, obj) => {
         if (err) {
           resolve({});
-          reject(err);
         } else {
           resolve(obj);
         }

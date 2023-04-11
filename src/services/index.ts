@@ -4,3 +4,4 @@ export { default as CoinService } from './Coin';
 export { default as UserService } from './User';
 export { default as PathService } from './Path';
 export { default as DexService } from './Dex';
+export { default as NftService } from './Nft';

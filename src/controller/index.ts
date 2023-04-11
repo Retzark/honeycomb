@@ -8,3 +8,4 @@ export { default as QueueController } from './Queue';
 export { default as ProtocolController } from './Protocol';
 export { default as StatusController } from './Status';
 export { default as DexController } from './Dex';
+export { default as NftController } from './Nft';
