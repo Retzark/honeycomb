@@ -177,7 +177,84 @@ const Nft = () => {
       });
   };
 
-  return { getUsers, findItems, findSets };
+  const findSet = async (setname: string) => {
+    const setp = getPathObj(['sets', setname]);
+    const divs = getPathObj(['divs']);
+
+    return Promise.all([setp, divs])
+      .then((mem: any) => {
+        const result = [];
+        var set: any = {
+          set: setname,
+          link: `${mem[0].a}/${mem[0].p}`,
+          fee: {
+            amount: mem[0].f,
+            precision: CONFIG.precision,
+            token: CONFIG.TOKEN,
+          },
+          bond: {
+            amount: mem[0].b,
+            precision: CONFIG.precision,
+            token: CONFIG.TOKEN,
+          },
+          permlink: mem[0].p,
+          author: mem[0].a,
+          script: mem[0].s,
+          encoding: mem[0].e,
+          type: mem[0].t,
+          royalty: mem[0].r,
+          royalty_accounts: mem[0].ra || mem[0].a + '_10000',
+          name: mem[0].n,
+          name_long: mem[0].nl,
+          minted: Base64Utils.toNumber(mem[0].i),
+          max: Base64Utils.toNumber(mem[0].j),
+          max_opt_length: mem[0].y || 0,
+          max_exe_length: mem[0].x || 0,
+          total_div: {
+            amount: mem[1][set]?.e || 0,
+            precision: CONFIG.precision,
+            token: CONFIG.TOKEN,
+          },
+          last_div: {
+            amount: mem[1][set]?.l || 0,
+            precision: CONFIG.precision,
+            token: CONFIG.TOKEN,
+          },
+          period_div: mem[1][set]?.p,
+        };
+
+        let uids = [];
+
+        if (mem[0].u) uids = mem[0].u.split(',');
+
+        for (let i = 0; i < uids.length; i++) {
+          const owner = uids[i].split('_');
+          for (var j = 0; j < owner.length - 1; j++) {
+            result.push({
+              uid: owner[j],
+              set: setname,
+              script: mem[0].s,
+              owner: owner[owner.length - 1],
+            });
+          }
+        }
+
+        return {
+          isSuccess: true,
+          item: result,
+          set: set,
+        };
+      })
+      .catch((e) => {
+        return {
+          isSuccess: false,
+          item: [],
+          set: {},
+        };
+      });
+  };
+
+  return { getUsers, findItems, findSets, findSet };
 };
 
 export default Nft;
