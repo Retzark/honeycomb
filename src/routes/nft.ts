@@ -4,8 +4,9 @@ import { authUtils } from '@src/utils';
 
 const NftAPI = express();
 const { featuresNft } = authUtils();
-const { getNftUsers } = NftController();
+const { getNftUsers, getItems } = NftController();
 
 NftAPI.get('/nfts/:user', featuresNft, getNftUsers);
+NftAPI.get('/:set/:item', featuresNft, getItems);
 
 export default NftAPI;
