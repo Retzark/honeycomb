@@ -52,10 +52,10 @@ const Nft = () => {
       });
   };
 
-  const getSetItems = async (setname: string, itemname: string) => {
+  const findItems = async (setname: string, itemname: string) => {
     const setp = getPathObj(['sets', setname]);
 
-    Promise.all([setp])
+    return Promise.all([setp])
       .then((mem: any) => {
         const location = mem[0].u.indexOf(`${itemname}_`);
         let owner = '';
@@ -115,10 +115,69 @@ const Nft = () => {
         });
       })
       .catch((e) => {
+        return {
+          isSuccess: false,
+          msg: `Something went wrong ${e}`,
+        };
+      });
+  };
+
+  const findSets = async () => {
+    const sets = getPathObj(['sets']);
+    const divs = getPathObj(['div']);
+
+    return Promise.all([sets, divs])
+      .then((mem: any) => {
+        const result = [];
+        for (const set in mem[0]) {
+          result.push({
+            set,
+            link: `${mem[0][set].a}/${mem[0][set].p}`,
+            fee: {
+              amount: mem[0][set].f,
+              precision: CONFIG.precision,
+              token: CONFIG.TOKEN,
+            },
+            bond: {
+              amount: mem[0][set].b,
+              precision: CONFIG.precision,
+              token: CONFIG.TOKEN,
+            },
+            permlink: mem[0][set].p,
+            author: mem[0][set].a,
+            script: mem[0][set].s,
+            encoding: mem[0][set].e,
+            type: mem[0][set].t,
+            royalty: mem[0][set].r,
+            royalty_allocation: mem[0][set].ra || `${mem[0][set].a}_10000`,
+            name: mem[0][set].n,
+            name_long: mem[0][set].nl,
+            minted: mem[0][set].i,
+            max: Base64Utils.toNumber(mem[0][set].j),
+            max_exe_length: mem[0][set].x || 0,
+            max_opt_length: mem[0][set].y || 0,
+            total_div: {
+              amount: mem[1][set]?.e || 0,
+              precision: CONFIG.precision,
+              token: CONFIG.TOKEN,
+            },
+            last_div: {
+              amount: mem[1][set]?.l || 0,
+              precision: CONFIG.precision,
+              token: CONFIG.TOKEN,
+            },
+            period_div: mem[1][set]?.p,
+          });
+        }
+
+        return result;
+      })
+      .catch((e) => {
         return `Something went wrong ${e}`;
       });
   };
-  return { getUsers, getSetItems };
+
+  return { getUsers, findItems, findSets };
 };
 
 export default Nft;

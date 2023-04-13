@@ -4,7 +4,7 @@ import { RAM } from '@src/utils';
 import { NftService } from '@src/services';
 
 const Nft = () => {
-  const { getUsers, getSetItems } = NftService();
+  const { getUsers, findItems, findSets } = NftService();
 
   const getNftUsers = async (req: Request, res: Response) => {
     try {
@@ -39,7 +39,7 @@ const Nft = () => {
       const itemname = req.params.item || ':';
       const setname = req.params.set || ':';
 
-      const results: any = await getSetItems(setname, itemname);
+      const results: any = await findItems(setname, itemname);
 
       if (results?.isSuccess) {
         res.send(
@@ -73,7 +73,33 @@ const Nft = () => {
       console.log('Error: ', error);
     }
   };
-  return { getNftUsers, getItems };
+
+  const getSets = async (_req: Request, res: Response) => {
+    try {
+      res.setHeader('Content-Type', 'application/json');
+
+      const results: any = await findSets();
+
+      if (results.length > 0) {
+        res.send(
+          JSON.stringify(
+            {
+              results,
+              node: CONFIG.username,
+              behind: RAM.behind,
+              VERSION,
+            },
+            null,
+            3
+          )
+        );
+      }
+    } catch (error) {
+      console.log('Error: ', error);
+    }
+  };
+
+  return { getNftUsers, getItems, getSets };
 };
 
 export default Nft;
