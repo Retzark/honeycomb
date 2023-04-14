@@ -386,6 +386,40 @@ const Nft = () => {
         return `Something went wrong ${e}`;
       });
   };
+
+  const findSales = async (from: string) => {
+    const lsp = getPathObj(['ls']);
+    const mlsp = getPathObj(['mls']);
+    const setp = getPathObj(['sets']);
+
+    return Promise.all([lsp, mlsp, setp])
+      .then((mem: any) => {
+        let result = [];
+        for (const item in mem[0]) {
+          if (!from || from != item.split(':')[0]) {
+            const listing = {
+              uid: item.split(':')[1],
+              set: item.split(':')[0],
+              price: {
+                amount: mem[0][item].p,
+                precision: mem[0][item].h ? 3 : CONFIG.precision,
+                token: mem[0][item].h ? mem[0][item].h : CONFIG.TOKEN,
+              },
+              by: mem[0][item].o,
+              script: mem[2][item.split(':')[0]].s,
+              name_long: mem[2][item.split(':')[0]].nl,
+            };
+            result.push(listing);
+          }
+        }
+
+        return result;
+      })
+      .catch((e) => {
+        return `Something went wrong ${e}`;
+      });
+  };
+
   return {
     findUsers,
     findItems,
@@ -393,6 +427,7 @@ const Nft = () => {
     findSet,
     findAuctions,
     findMintAuctions,
+    findSales,
   };
 };
 
