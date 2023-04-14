@@ -454,6 +454,161 @@ const Nft = () => {
       });
   };
 
+  const findMintSupply = async (from: string) => {
+    const ahp = getPathObj(['am']);
+    const setp = getPathObj(['sets']);
+    const lsp = getPathObj(['lt']);
+    const lshp = getPathObj(['lth']);
+
+    return Promise.all([ahp, setp, lsp, lshp])
+      .then((mem: any) => {
+        let result = [];
+        let sets: any = {};
+        let hivesells = mem[3];
+
+        for (const item in mem[0]) {
+          if (!from || item.split(':')[0] == from) {
+            if (sets[item.split(':')[0]] == undefined) {
+              sets[item.split(':')[0]] = {
+                set: item.split(':')[0],
+                script: mem[1][item.split(':')[0]].s,
+                name_long: mem[1][item.split(':')[0]].nl,
+                auctions: [],
+                sales: [],
+                qty_sales: 0,
+                qty_auctions: 0,
+                qty: 0,
+              };
+            }
+            let auctionTimer: any = {},
+              now = new Date();
+            auctionTimer.expiryIn = now.setSeconds(
+              now.getSeconds() + (mem[0][item].e - TXIDUtils.getBlockNum()) * 3
+            );
+            auctionTimer.expiryUTC = new Date(auctionTimer.expiryIn);
+            auctionTimer.expiryString = auctionTimer.expiryUTC.toISOString();
+            sets[item.split(':')[0]].qty_auctions += mem[0][item].a || 1;
+            sets[item.split(':')[0]].qty += mem[0][item].a || 1;
+            sets[item.split(':')[0]].auctions.push({
+              uid: item.split(':')[1],
+              set: item.split(':')[0],
+              price: mem[0][item].b || mem[0][item].p,
+              pricenai: {
+                amount: mem[0][item].b || mem[0][item].p,
+                precision: CONFIG.precision,
+                token: CONFIG.TOKEN,
+              }, //starting price
+              initial_price: {
+                amount: mem[0][item].p,
+                precision: CONFIG.precision,
+                token: CONFIG.TOKEN,
+              },
+              time: auctionTimer.expiryString,
+              by: mem[0][item].o,
+              bids: mem[0][item].c || 0,
+              bidder: mem[0][item].f || '',
+              script: mem[1][item.split(':')[0]].s,
+              name_long: mem[1][item.split(':')[0]].nl,
+              days: mem[0][item].t,
+              buy: mem[0][item].n || '',
+            });
+          }
+        }
+
+        for (const item in mem[2]) {
+          if (!from || item.split(':')[0] == from) {
+            if (sets[item.split(':')[0]] == undefined) {
+              sets[item.split(':')[0]] = {
+                set: item.split(':')[0],
+                script: mem[1][item.split(':')[0]].s,
+                auctions: [],
+                sales: [],
+                qty_sales: 0,
+                qty_auctions: 0,
+                qty: 0,
+              };
+            }
+            const listing = {
+              uid: item.split(':')[1],
+              set: item.split(':')[0],
+              price: mem[2][item].p,
+              qty: mem[2][item].q || 1,
+              pricenai: {
+                amount: mem[2][item].p,
+                precision: CONFIG.precision,
+                token: CONFIG.TOKEN,
+              },
+              by: mem[2][item].o,
+              script: mem[1][item.split(':')[0]].s,
+              name_long: mem[1][item.split(':')[0]].nl,
+            };
+            sets[item.split(':')[0]].qty += mem[2][item].a || 1;
+            sets[item.split(':')[0]].qty_sales += mem[2][item].a || 1;
+            sets[item.split(':')[0]].sales.push(listing);
+          }
+        }
+
+        for (const item in hivesells) {
+          if (!from || item.split(':')[0] == from) {
+            if (sets[item.split(':')[0]] == undefined) {
+              sets[item.split(':')[0]] = {
+                set: item.split(':')[0],
+                script: mem[1][item.split(':')[0]].s,
+                name_long: mem[1][item.split(':')[0]].nl,
+                auctions: [],
+                sales: [],
+                qty_sales: 0,
+                qty_auctions: 0,
+                qty: 0,
+              };
+            }
+            let token = hivesells[item].h ? 'HIVE' : 'HBD';
+            let amount = hivesells[item].h
+              ? hivesells[item].h
+              : hivesells[item].b;
+            let pb = hivesells[item].e
+              ? hivesells[item].e.split('pb:')[1]
+                ? hivesells[item].e.split('pb:')[1].split(',')[0]
+                : ''
+              : '';
+            let max = hivesells[item].e
+              ? hivesells[item].e.split('max:')[1]
+                ? hivesells[item].e.split('max:')[1].split(',')[0]
+                : hivesells[item].q
+              : hivesells[item].q;
+            const listing = {
+              uid: item.split(':')[1],
+              set: item.split(':')[0],
+              price: amount,
+              qty: hivesells[item].q,
+              pricenai: {
+                amount: amount,
+                precision: 3,
+                token: token,
+              },
+              by: hivesells[item].o,
+              script: mem[1][item.split(':')[0]].s,
+              name_long: mem[1][item.split(':')[0]].nl,
+              max,
+              pb,
+            };
+            sets[item.split(':')[0]].qty += hivesells[item].q || 1;
+            sets[item.split(':')[0]].qty_sales += hivesells[item].q || 1;
+            sets[item.split(':')[0]].sales.push(listing);
+          }
+        }
+
+        for (const item in sets) {
+          result.push(sets[item]);
+        }
+
+        return result;
+      })
+      .catch((e) => {
+        return `Something went wrong ${e}`;
+      });
+  };
+
   return {
     findUsers,
     findItems,
@@ -463,6 +618,7 @@ const Nft = () => {
     findMintAuctions,
     findSales,
     findMintSales,
+    findMintSupply,
   };
 };
 

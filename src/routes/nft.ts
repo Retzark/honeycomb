@@ -13,6 +13,7 @@ const {
   getMintAuctions,
   getSales,
   getMintSales,
+  getMintSupply,
 } = NftController();
 
 NftAPI.get('/nfts/:user', featuresNft, getNftUsers);
@@ -27,5 +28,7 @@ NftAPI.get('/sales', featuresNft, getSales);
 NftAPI.get('/sales/:set', featuresNft, getSales);
 NftAPI.get('/mint_sales', featuresNft, getMintSales);
 NftAPI.get('/mint_sales/:set', featuresNft, getMintSales);
+NftAPI.get('/mint_supply', featuresNft, getMintSupply);
+NftAPI.get('/mint_supply/:set', featuresNft, getMintSupply);
 
 export default NftAPI;

@@ -13,6 +13,7 @@ const Nft = () => {
     findMintAuctions,
     findSales,
     findMintSales,
+    findMintSupply,
   } = NftService();
 
   const getNftUsers = async (req: Request, res: Response) => {
@@ -250,6 +251,31 @@ const Nft = () => {
     }
   };
 
+  const getMintSupply = async (req: Request, res: Response) => {
+    try {
+      let from = req.params.set;
+
+      res.setHeader('Content-Type', 'application/json');
+
+      const results: any = await findMintSupply(from);
+
+      res.send(
+        JSON.stringify(
+          {
+            results,
+            node: CONFIG.username,
+            behind: RAM.behind,
+            VERSION,
+          },
+          null,
+          3
+        )
+      );
+    } catch (error) {
+      console.log('Error: ', error);
+    }
+  };
+
   return {
     getNftUsers,
     getItems,
@@ -259,6 +285,7 @@ const Nft = () => {
     getMintAuctions,
     getSales,
     getMintSales,
+    getMintSupply,
   };
 };
 
