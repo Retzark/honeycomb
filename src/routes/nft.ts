@@ -14,6 +14,8 @@ const {
   getSales,
   getMintSales,
   getMintSupply,
+  getPfpUser,
+  getTrades,
 } = NftController();
 
 NftAPI.get('/nfts/:user', featuresNft, getNftUsers);
@@ -30,5 +32,7 @@ NftAPI.get('/mint_sales', featuresNft, getMintSales);
 NftAPI.get('/mint_sales/:set', featuresNft, getMintSales);
 NftAPI.get('/mint_supply', featuresNft, getMintSupply);
 NftAPI.get('/mint_supply/:set', featuresNft, getMintSupply);
+NftAPI.get('/pfp/:user', featuresNft, getPfpUser);
+NftAPI.get('/trades/:kind/:user', featuresNft, getTrades);
 
 export default NftAPI;

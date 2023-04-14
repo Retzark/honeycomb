@@ -229,7 +229,7 @@ const Nft = () => {
 
         for (let i = 0; i < uids.length; i++) {
           const owner = uids[i].split('_');
-          for (var j = 0; j < owner.length - 1; j++) {
+          for (let j = 0; j < owner.length - 1; j++) {
             result.push({
               uid: owner[j],
               set: setname,
@@ -609,6 +609,83 @@ const Nft = () => {
       });
   };
 
+  const findPfpUser = async (user: string) => {
+    const offp = getPathObj(['pfps', user]);
+    const userItemsp = getPathObj(['nfts', user]);
+    const setsp = getPathObj(['sets']);
+
+    return Promise.all([offp, userItemsp, setsp])
+      .then((mem: any) => {
+        const nft = mem[1][mem[0]];
+        let pfp = mem[0];
+
+        if (!nft.s) {
+          pfp = ':';
+        }
+
+        return {
+          isSuccess: true,
+          data: [
+            {
+              pfp,
+              nft,
+              set: mem[2][mem[0].split(':')[0]] || '',
+            },
+          ],
+        };
+      })
+      .catch((e) => {
+        return {
+          isSuccess: false,
+          msg: 'No Profile Picture Set or Owned',
+          error: e,
+        };
+      });
+  };
+
+  const findTrades = async (user: string, kind: string) => {
+    if (kind != 'nfts') {
+      kind = 'fts';
+    }
+
+    const tradesp = getPathObj([kind, 't']);
+    const setsp = getPathObj(['sets']);
+
+    return Promise.all([tradesp, setsp])
+      .then((mem: any) => {
+        let trades = mem[0];
+        const result = [];
+
+        for (const item in trades) {
+          const str = trades[item].t.split('_');
+          if (str[0] == user || str[1] == user) {
+            result.push({
+              from: str[0],
+              to: str[1],
+              price: parseInt(str[2]),
+              type: str[3],
+              nai: {
+                amount: parseInt(str[2]),
+                precision:
+                  str[3] == 'HIVE' || str[3] == 'HBD' ? 3 : CONFIG.precision,
+                token: str[3] == 'TOKEN' ? CONFIG.TOKEN : str[3],
+              },
+              item,
+              kind,
+              set: item.split(':')[0],
+              uid: item.split(':')[1],
+              script: mem[1][item.split(':')[0]].s,
+            });
+          }
+        }
+
+        return result;
+      })
+      .catch((e) => {
+        return `Something went wrong ${e}`;
+      });
+  };
+
   return {
     findUsers,
     findItems,
@@ -619,6 +696,8 @@ const Nft = () => {
     findSales,
     findMintSales,
     findMintSupply,
+    findPfpUser,
+    findTrades,
   };
 };
 

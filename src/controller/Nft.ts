@@ -14,6 +14,8 @@ const Nft = () => {
     findSales,
     findMintSales,
     findMintSupply,
+    findPfpUser,
+    findTrades,
   } = NftService();
 
   const getNftUsers = async (req: Request, res: Response) => {
@@ -111,7 +113,7 @@ const Nft = () => {
 
   const getSet = async (req: Request, res: Response) => {
     try {
-      let setname = req.params.set;
+      const setname = req.params.set;
 
       res.setHeader('Content-Type', 'application/json');
 
@@ -153,7 +155,7 @@ const Nft = () => {
 
   const getAuctions = async (req: Request, res: Response) => {
     try {
-      let from = req.params.set;
+      const from = req.params.set;
 
       res.setHeader('Content-Type', 'application/json');
 
@@ -178,7 +180,7 @@ const Nft = () => {
 
   const getMintAuctions = async (req: Request, res: Response) => {
     try {
-      let from = req.params.set;
+      const from = req.params.set;
 
       res.setHeader('Content-Type', 'application/json');
 
@@ -203,7 +205,7 @@ const Nft = () => {
 
   const getSales = async (req: Request, res: Response) => {
     try {
-      let from = req.params.set;
+      const from = req.params.set;
 
       res.setHeader('Content-Type', 'application/json');
 
@@ -228,7 +230,7 @@ const Nft = () => {
 
   const getMintSales = async (req: Request, res: Response) => {
     try {
-      let from = req.params.set;
+      const from = req.params.set;
 
       res.setHeader('Content-Type', 'application/json');
 
@@ -253,7 +255,7 @@ const Nft = () => {
 
   const getMintSupply = async (req: Request, res: Response) => {
     try {
-      let from = req.params.set;
+      const from = req.params.set;
 
       res.setHeader('Content-Type', 'application/json');
 
@@ -263,6 +265,74 @@ const Nft = () => {
         JSON.stringify(
           {
             results,
+            node: CONFIG.username,
+            behind: RAM.behind,
+            VERSION,
+          },
+          null,
+          3
+        )
+      );
+    } catch (error) {
+      console.log('Error: ', error);
+    }
+  };
+
+  const getPfpUser = async (req: Request, res: Response) => {
+    try {
+      const user = req.params.user;
+
+      res.setHeader('Content-Type', 'application/json');
+
+      const results: any = await findPfpUser(user);
+
+      if (results.isSuccess) {
+        res.send(
+          JSON.stringify(
+            {
+              results,
+              node: CONFIG.username,
+              behind: RAM.behind,
+              VERSION,
+            },
+            null,
+            3
+          )
+        );
+      } else {
+        res.send(
+          JSON.stringify(
+            {
+              result: results.msg,
+              error: results.error,
+              node: CONFIG.username,
+              behind: RAM.behind,
+              VERSION,
+            },
+            null,
+            3
+          )
+        );
+      }
+    } catch (error) {
+      console.log('Error: ', error);
+    }
+  };
+
+  const getTrades = async (req: Request, res: Response) => {
+    try {
+      const user = req.params.user;
+      const kind = req.params.kind;
+
+      res.setHeader('Content-Type', 'application/json');
+
+      const results: any = await findTrades(user, kind);
+
+      res.send(
+        JSON.stringify(
+          {
+            results,
+            kind,
             node: CONFIG.username,
             behind: RAM.behind,
             VERSION,
@@ -286,6 +356,8 @@ const Nft = () => {
     getSales,
     getMintSales,
     getMintSupply,
+    getPfpUser,
+    getTrades,
   };
 };
 
