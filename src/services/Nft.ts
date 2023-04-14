@@ -336,7 +336,64 @@ const Nft = () => {
       });
   };
 
-  return { findUsers, findItems, findSets, findSet, findAuctions };
+  const findMintAuctions = async (from: string) => {
+    const ahp = getPathObj(['am']);
+    const setp = getPathObj(['sets']);
+
+    return Promise.all([ahp, setp])
+      .then((mem: any) => {
+        let result = [];
+
+        for (const item in mem[0]) {
+          if (!from || item.split(':')[0] == from) {
+            let auctionTimer: any = {};
+            const now = new Date();
+
+            auctionTimer.expiryIn = now.setSeconds(
+              now.getSeconds() + (mem[0][item].e - TXIDUtils.getBlockNum()) * 3
+            );
+            auctionTimer.expiryUTC = new Date(auctionTimer.expiryIn);
+            auctionTimer.expiryString = auctionTimer.expiryUTC.toISOString();
+
+            result.push({
+              uid: item.split(':')[1],
+              set: item.split(':')[0],
+              price: {
+                amount: mem[0][item].b || mem[0][item].p,
+                precision: CONFIG.precision,
+                token: CONFIG.TOKEN,
+              }, //starting price
+              initial_price: {
+                amount: mem[0][item].p,
+                precision: CONFIG.precision,
+                token: CONFIG.TOKEN,
+              },
+              time: auctionTimer.expiryString,
+              by: mem[0][item].o,
+              bids: mem[0][item].c || 0,
+              bidder: mem[0][item].f || '',
+              script: mem[1][item.split(':')[0]].s,
+              name_long: mem[1][item.split(':')[0]].nl,
+              days: mem[0][item].t,
+              buy: mem[0][item].n || '',
+            });
+          }
+        }
+
+        return result;
+      })
+      .catch((e) => {
+        return `Something went wrong ${e}`;
+      });
+  };
+  return {
+    findUsers,
+    findItems,
+    findSets,
+    findSet,
+    findAuctions,
+    findMintAuctions,
+  };
 };
 
 export default Nft;
