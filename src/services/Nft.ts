@@ -31,7 +31,7 @@ const Nft = () => {
         for (const item in mem[2]) {
           if (mem[2][item][user]) {
             const set = item;
-            console.log({ item });
+
             mint_tokens.push({
               qty: mem[2][item][user],
               set,
