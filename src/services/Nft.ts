@@ -1,12 +1,12 @@
 import { CONFIG } from '@src/config';
-import { Base64Utils } from '@src/utils';
+import { Base64Utils, TXIDUtils } from '@src/utils';
 import { PathService } from '.';
 import { store } from '..';
 
 const Nft = () => {
   const { getPathObj } = PathService();
 
-  const getUsers = async (user: string) => {
+  const findUsers = async (user: string) => {
     const userItems = getPathObj(['nfts', user]);
     const sets = getPathObj(['sets']);
     const mintItems = getPathObj(['rnfts']);
@@ -254,7 +254,89 @@ const Nft = () => {
       });
   };
 
-  return { getUsers, findItems, findSets, findSet };
+  const findAuctions = async (from: string) => {
+    const ahp = getPathObj(['ah']);
+    const setp = getPathObj(['sets']);
+    const ahhp = getPathObj(['ahh']);
+
+    return Promise.all([ahp, setp, ahhp])
+      .then((mem: any) => {
+        let result = [];
+        for (const item in mem[0]) {
+          if (!from || item.split(':')[0] == from) {
+            let auctionTimer: any = {};
+            const now = new Date();
+            auctionTimer.expiryIn = now.setSeconds(
+              now.getSeconds() + (mem[0][item].e - TXIDUtils.getBlockNum()) * 3
+            );
+            auctionTimer.expiryUTC = new Date(auctionTimer.expiryIn);
+            auctionTimer.expiryString = auctionTimer.expiryUTC.toISOString();
+            result.push({
+              uid: item.split(':')[1],
+              set: item.split(':')[0],
+              price: {
+                amount: mem[0][item].b || mem[0][item].p,
+                precision: CONFIG.precision,
+                token: CONFIG.TOKEN,
+              }, //starting price
+              initial_price: {
+                amount: mem[0][item].p,
+                precision: CONFIG.precision,
+                token: CONFIG.TOKEN,
+              },
+              time: auctionTimer.expiryString,
+              by: mem[0][item].o,
+              bids: mem[0][item].c || 0,
+              bidder: mem[0][item].f || '',
+              script: mem[1][item.split(':')[0]].s,
+              name_long: mem[1][item.split(':')[0]].nl,
+              days: mem[0][item].t,
+              buy: mem[0][item].n || '',
+            });
+          }
+        }
+        for (const item in mem[2]) {
+          if (!from || item.split(':')[0] == from) {
+            let auctionTimer: any = {};
+            const now = new Date();
+            auctionTimer.expiryIn = now.setSeconds(
+              now.getSeconds() + (mem[2][item].e - TXIDUtils.getBlockNum()) * 3
+            );
+            auctionTimer.expiryUTC = new Date(auctionTimer.expiryIn);
+            auctionTimer.expiryString = auctionTimer.expiryUTC.toISOString();
+            result.push({
+              uid: item.split(':')[1],
+              set: item.split(':')[0],
+              price: {
+                amount: mem[2][item].b || mem[2][item].p,
+                precision: 3,
+                token: mem[2][item].h,
+              }, //starting price
+              initial_price: {
+                amount: mem[2][item].p,
+                precision: 3,
+                token: mem[2][item].h,
+              },
+              time: auctionTimer.expiryString,
+              by: mem[2][item].o,
+              bids: mem[2][item].c || 0,
+              bidder: mem[2][item].f || '',
+              script: mem[1][item.split(':')[0]].s,
+              name_long: mem[1][item.split(':')[0]].nl,
+              days: mem[2][item].t,
+              buy: mem[2][item].n || '',
+            });
+          }
+        }
+
+        return result;
+      })
+      .catch((e) => {
+        return `Something went wrong ${e}`;
+      });
+  };
+
+  return { findUsers, findItems, findSets, findSet, findAuctions };
 };
 
 export default Nft;
