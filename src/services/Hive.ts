@@ -34,7 +34,7 @@ const Hive = () => {
     }
   };
 
-  const fetchAccounts = async (account: string | string[]) => { };
+  const fetchAccounts = async (account: string | string[]) => {};
 
   return {
     fetchHive,

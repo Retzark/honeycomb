@@ -11,7 +11,7 @@ const Root = () => {
     try {
       await fetchHive();
     } catch (error) {
-      console.log("Error: ", error);
+      console.log('Error: ', error);
     }
   };
 
@@ -37,7 +37,7 @@ const Root = () => {
         );
       });
     } catch (error) {
-      console.log("Error: ", error);
+      console.log('Error: ', error);
     }
   };
 

@@ -25,18 +25,19 @@ export const store = Pathwise(level('./db', { createIfEmpty: true }));
   const { dynStart } = AppStart();
 
   console.log(
-    `IPFS: ${CONFIG.ipfshost == 'ipfs' ? 'DockerIPFS' : CONFIG.ipfshost}:${CONFIG.ipfsport
+    `IPFS: ${CONFIG.ipfshost == 'ipfs' ? 'DockerIPFS' : CONFIG.ipfshost}:${
+      CONFIG.ipfsport
     }`
   );
 
   dynStart();
 
   app.use(cors());
-  app.get('/', (_req: Request, res: Response) => {
+  app.get('/server', (_req: Request, res: Response) => {
     res.send('Server is running...');
   });
 
-  app.use('/api/v1', api);
+  app.use(api);
 
   app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
