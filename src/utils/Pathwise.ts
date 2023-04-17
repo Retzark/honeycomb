@@ -41,7 +41,7 @@ const Pathwise = (db: any) => {
       case 'object':
         const keys = Object.keys(obj);
         const next = after(keys.length, fn);
-        keys.forEach(function (k) {
+        keys.forEach((k) => {
           _write(batch, key.concat(k), obj[k], next);
         });
         break;
@@ -74,7 +74,7 @@ const Pathwise = (db: any) => {
       }
     });
 
-    ops.forEach(function (op) {
+    ops.forEach((op) => {
       BLOCK.ops.push(
         stringify({ type: op.type, path: op.path, data: op.data })
       );
@@ -98,7 +98,7 @@ const Pathwise = (db: any) => {
         let er = null;
         try {
           console.log(data);
-          data.forEach(function (kv) {
+          data.forEach((kv) => {
             const segs = kv.key.slice(path.length);
             if (segs.length) {
               segs.forEach((seg: any, idx: number) => {
@@ -133,7 +133,7 @@ const Pathwise = (db: any) => {
         start: path,
         end: path.concat(undefined),
       }),
-      function (err: any, data: any[]) {
+      (err: any, data: any[]) => {
         if (err) return fn(err);
         let er = null;
         try {
@@ -177,7 +177,7 @@ const Pathwise = (db: any) => {
       }),
       (err: any, keys: any[]) => {
         if (err) return fn(err);
-        keys.forEach(function (key) {
+        keys.forEach((key) => {
           batch.del(bytewise.encode(key));
         });
         if (opts.batch) fn();
@@ -192,11 +192,11 @@ const Pathwise = (db: any) => {
         start: path,
         end: path.concat(undefined),
       }),
-      function (err: any, kv: any[]) {
+      (err: any, kv: any[]) => {
         if (err) return fn(err);
         fn(
           null,
-          kv.map(function (_kv) {
+          kv.map((_kv) => {
             return _kv.key[path.length] || _kv.value;
           })
         );
@@ -214,11 +214,11 @@ const Pathwise = (db: any) => {
         start: [...path, opts.gte],
         end: [...path, opts.lte].concat(undefined),
       }),
-      function (err: any, kv: any[]) {
+      (err: any, kv: any[]) => {
         if (err) return fn(err);
         fn(
           null,
-          kv.map(function (_kv) {
+          kv.map((_kv) => {
             return _kv.key[path.length] || _kv.value;
           })
         );

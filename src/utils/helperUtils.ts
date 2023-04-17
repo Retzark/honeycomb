@@ -139,3 +139,17 @@ export const Owners = {
     });
   },
 };
+
+export const alphabeticShift = (inputString: string) => {
+  const newString = [];
+
+  for (let i = 0; i < inputString.length; i++) {
+    if (i == inputString.length - 1) {
+      newString.push(String.fromCharCode(inputString.charCodeAt(i) + 1));
+    } else {
+      newString.push(String.fromCharCode(inputString.charCodeAt(i)));
+    }
+  }
+
+  return newString.join('');
+};

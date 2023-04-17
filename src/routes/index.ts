@@ -10,6 +10,7 @@ import ProtocolAPI from './protocol';
 import StatusAPI from './status';
 import DexAPI from './dex';
 import NftAPI from './nft';
+import PobAPI from './pob';
 
 const api = express();
 
@@ -24,5 +25,6 @@ api.use('/protocol', ProtocolAPI);
 api.use('/status', StatusAPI);
 api.use('/dex', DexAPI);
 api.use('/nft', NftAPI);
+api.use('/pob', PobAPI);
 
 export default api;

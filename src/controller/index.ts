@@ -9,3 +9,4 @@ export { default as ProtocolController } from './Protocol';
 export { default as StatusController } from './Status';
 export { default as DexController } from './Dex';
 export { default as NftController } from './Nft';
+export { default as PobController } from './Pob';

@@ -10,6 +10,7 @@ export {
   unwrapOps,
   Owners,
   status,
+  alphabeticShift,
 } from './helperUtils';
 export { Base64Utils } from './base64Utils';
 export { stateStart } from './State';
