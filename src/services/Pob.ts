@@ -51,9 +51,26 @@ const Pob = () => {
     });
   };
 
+  const findPost = async (author: string, permlink: string) => {
+    return new Promise((r, e) => {
+      pool.query(
+        `SELECT * FROM posts WHERE author = '${author}' AND permlink = '${permlink}';`,
+        (err, res) => {
+          if (err) {
+            console.log(`Error - Failed to get a post from posts`);
+            e(err);
+          } else {
+            r(res.rows[0]);
+          }
+        }
+      );
+    });
+  };
+
   return {
     findBlog,
     findAuthorPosts,
+    findPost,
   };
 };
 

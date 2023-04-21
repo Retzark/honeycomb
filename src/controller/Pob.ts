@@ -5,7 +5,7 @@ import { store } from '..';
 import { PobService } from '@src/services';
 
 const Pob = () => {
-  const { findAuthorPosts } = PobService();
+  const { findAuthorPosts, findPost } = PobService();
 
   const getBlog = async (req: Request, res: Response) => {
     try {
@@ -89,9 +89,36 @@ const Pob = () => {
     }
   };
 
+  const getPost = async (req: Request, res: Response) => {
+    try {
+      res.setHeader('Content-Type', 'application/json');
+
+      const permlink = req.params.permlink;
+      const author = req.params.author;
+
+      const results = await findPost(author, permlink);
+
+      res.send(
+        JSON.stringify(
+          {
+            result: results,
+            node: CONFIG.username,
+            behind: RAM.behind,
+            VERSION,
+          },
+          null,
+          3
+        )
+      );
+    } catch (error) {
+      console.log('Error: ', error);
+    }
+  };
+
   return {
     getBlog,
     getAuthorPost,
+    getPost,
   };
 };
 
