@@ -13,6 +13,7 @@ import {
   RootController,
   StatusController,
   UserController,
+  StateController,
 } from '@src/controller';
 
 const router = express();
@@ -52,6 +53,7 @@ const {
   getPostAuthorPermlink,
   getPosts,
 } = PobController();
+const { getState } = StateController();
 
 router.get('/', Start);
 router.get('/stats', getRoot);
@@ -100,7 +102,7 @@ router.get('/promoted', featuresPob, getPromotedPosts);
 router.get('/posts/:author/:permlink', featuresPob, getPostAuthorPermlink);
 router.get('/posts', featuresPob, getPosts); //votable posts
 
-// router.get('/state', featuresState, API.state); //Do not recommend having a state dump in a production API
+router.get('/state', featuresState, getState); //Do not recommend having a state dump in a production API
 // router.get('/pending', featuresState, API.pending); // The transaction signer now can sign multiple actions per block and this is nearly always empty, still good for troubleshooting
 // // Some HIVE APi is wrapped here to support a stateless frontend built on the cheap with dreamweaver
 // // None of these functions are required for token functionality and should likely be removed from the community version
