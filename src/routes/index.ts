@@ -49,6 +49,7 @@ const {
   getNewPosts,
   getTrendingPosts,
   getPromotedPosts,
+  getPostAuthorPermlink,
 } = PobController();
 
 router.get('/', Start);
@@ -95,7 +96,7 @@ router.get('/dapps/@:author/:permlink', featuresPob, getPost);
 router.get('/new', featuresPob, getNewPosts);
 router.get('/trending', featuresPob, getTrendingPosts);
 router.get('/promoted', featuresPob, getPromotedPosts);
-// router.get('/posts/:author/:permlink', featuresPob, API.PostAuthorPermlink);
+router.get('/posts/:author/:permlink', featuresPob, getPostAuthorPermlink);
 // router.get('/posts', featuresPob, API.posts); //votable posts
 
 // router.get('/state', featuresState, API.state); //Do not recommend having a state dump in a production API

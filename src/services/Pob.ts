@@ -1,7 +1,10 @@
 import { Pool } from 'pg';
 import { CONFIG } from '@src/config';
+import { PathService } from '.';
 
 const Pob = () => {
+  const { getPathObj } = PathService();
+
   const pool = new Pool({
     connectionString: CONFIG.dbcs,
     ssl: {
@@ -161,6 +164,21 @@ const Pob = () => {
     });
   };
 
+  const findPostAuthorPermlink = async (author: string, permlink: string) => {
+    const nowp = getPathObj(['posts', `${author}/${permlink}`]);
+
+    return Promise.all([nowp])
+      .then((a: any) => {
+        return {
+          now: a[0],
+          arch: a[1],
+        };
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   return {
     findBlog,
     findAuthorPosts,
@@ -168,6 +186,7 @@ const Pob = () => {
     findNewPosts,
     findTrendingPosts,
     findPromotedPosts,
+    findPostAuthorPermlink,
   };
 };
 

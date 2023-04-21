@@ -11,6 +11,7 @@ const Pob = () => {
     findNewPosts,
     findTrendingPosts,
     findPromotedPosts,
+    findPostAuthorPermlink,
   } = PobService();
 
   const getBlog = async (req: Request, res: Response) => {
@@ -208,6 +209,33 @@ const Pob = () => {
     }
   };
 
+  const getPostAuthorPermlink = async (req: Request, res: Response) => {
+    try {
+      res.setHeader('Content-Type', 'application/json');
+
+      const author = req.params.author;
+      const permlink = req.params.permlink;
+
+      const results = await findPostAuthorPermlink(author, permlink);
+
+      res.send(
+        JSON.stringify(
+          {
+            now: results?.now || '',
+            arch: results?.arch || '',
+            node: CONFIG.username,
+            behind: RAM.behind,
+            VERSION,
+          },
+          null,
+          3
+        )
+      );
+    } catch (error) {
+      console.log('Error: ', error);
+    }
+  };
+
   return {
     getBlog,
     getAuthorPost,
@@ -215,6 +243,7 @@ const Pob = () => {
     getNewPosts,
     getTrendingPosts,
     getPromotedPosts,
+    getPostAuthorPermlink,
   };
 };
 
