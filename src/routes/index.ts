@@ -42,7 +42,7 @@ const {
   getPfpUser,
   getTrades,
 } = NftController();
-const { getBlog, getAuthorPost, getPost } = PobController();
+const { getBlog, getAuthorPost, getPost, getNewPosts } = PobController();
 
 router.get('/', Start);
 router.get('/stats', getRoot);
@@ -85,7 +85,7 @@ router.get('/api/trades/:kind/:user', featuresNft, getTrades);
 router.get('/blog/@:un', featuresPob, getBlog);
 router.get('/dapps/@:author', featuresPob, getAuthorPost);
 router.get('/dapps/@:author/:permlink', featuresPob, getPost);
-// router.get('/new', featuresPob, API.getNewPosts);
+router.get('/new', featuresPob, getNewPosts);
 // router.get('/trending', featuresPob, API.getTrendingPosts);
 // router.get('/promoted', featuresPob, API.getPromotedPosts);
 // router.get('/posts/:author/:permlink', featuresPob, API.PostAuthorPermlink);
