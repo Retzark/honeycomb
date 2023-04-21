@@ -5,8 +5,13 @@ import { store } from '..';
 import { PobService } from '@src/services';
 
 const Pob = () => {
-  const { findAuthorPosts, findPost, findNewPosts, findTrendingPosts } =
-    PobService();
+  const {
+    findAuthorPosts,
+    findPost,
+    findNewPosts,
+    findTrendingPosts,
+    findPromotedPosts,
+  } = PobService();
 
   const getBlog = async (req: Request, res: Response) => {
     try {
@@ -174,12 +179,42 @@ const Pob = () => {
     }
   };
 
+  const getPromotedPosts = async (req: Request, res: Response) => {
+    try {
+      res.setHeader('Content-Type', 'application/json');
+
+      const reqAmt = parseInt(req.query.a as string);
+      const reqOff = parseInt(req.query.o as string);
+
+      const amt = reqAmt < 1 ? 50 : 100;
+      const off = reqOff < 0 ? 0 : reqOff;
+
+      const results = await findPromotedPosts(amt, off);
+
+      res.send(
+        JSON.stringify(
+          {
+            result: results,
+            node: CONFIG.username,
+            behind: RAM.behind,
+            VERSION,
+          },
+          null,
+          3
+        )
+      );
+    } catch (error) {
+      console.log('Error: ', error);
+    }
+  };
+
   return {
     getBlog,
     getAuthorPost,
     getPost,
     getNewPosts,
     getTrendingPosts,
+    getPromotedPosts,
   };
 };
 
