@@ -89,11 +89,48 @@ const Pob = () => {
     });
   };
 
+  const findTrendingPosts = async (amount: number, offset: number) => {
+    let off = offset;
+    let amt = amount;
+
+    if (!amount) amt = 50;
+    if (!off) off = 0;
+
+    return new Promise((r, e) => {
+      pool.query(
+        `SELECT 
+                        author, 
+                        permlink, 
+                        block, 
+                        votes, 
+                        voteweight, 
+                        promote, 
+                        paid 
+                    FROM 
+                        posts 
+                    WHERE 
+                        paid = false
+                    ORDER BY 
+                        voteweight DESC
+                    OFFSET ${off} ROWS FETCH FIRST ${amt} ROWS ONLY;`,
+        (err, res) => {
+          if (err) {
+            console.log(`Error - Failed to select some new from posts`);
+            e(err);
+          } else {
+            r(res.rows);
+          }
+        }
+      );
+    });
+  };
+
   return {
     findBlog,
     findAuthorPosts,
     findPost,
     findNewPosts,
+    findTrendingPosts,
   };
 };
 
