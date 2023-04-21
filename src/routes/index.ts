@@ -50,6 +50,7 @@ const {
   getTrendingPosts,
   getPromotedPosts,
   getPostAuthorPermlink,
+  getPosts,
 } = PobController();
 
 router.get('/', Start);
@@ -97,7 +98,7 @@ router.get('/new', featuresPob, getNewPosts);
 router.get('/trending', featuresPob, getTrendingPosts);
 router.get('/promoted', featuresPob, getPromotedPosts);
 router.get('/posts/:author/:permlink', featuresPob, getPostAuthorPermlink);
-// router.get('/posts', featuresPob, API.posts); //votable posts
+router.get('/posts', featuresPob, getPosts); //votable posts
 
 // router.get('/state', featuresState, API.state); //Do not recommend having a state dump in a production API
 // router.get('/pending', featuresState, API.pending); // The transaction signer now can sign multiple actions per block and this is nearly always empty, still good for troubleshooting

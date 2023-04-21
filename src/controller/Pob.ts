@@ -236,6 +236,31 @@ const Pob = () => {
     }
   };
 
+  const getPosts = async (req: Request, res: Response) => {
+    try {
+      res.setHeader('Content-Type', 'application/json');
+
+      store.get(['posts'], (_err, obj) => {
+        const feed = obj;
+
+        res.send(
+          JSON.stringify(
+            {
+              feed,
+              node: CONFIG.username,
+              behind: RAM.behind,
+              VERSION,
+            },
+            null,
+            3
+          )
+        );
+      });
+    } catch (error) {
+      console.log('Error: ', error);
+    }
+  };
+
   return {
     getBlog,
     getAuthorPost,
@@ -244,6 +269,7 @@ const Pob = () => {
     getTrendingPosts,
     getPromotedPosts,
     getPostAuthorPermlink,
+    getPosts,
   };
 };
 
