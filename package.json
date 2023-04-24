@@ -44,6 +44,7 @@
   "devDependencies": {
     "@types/bytewise": "^1.1.0",
     "@types/cors": "^2.8.13",
+    "@types/decode-uri-component": "^0.2.0",
     "@types/express": "^4.17.17",
     "@types/json-stable-stringify": "^1.0.34",
     "@types/node-fetch": "^2.6.2",

@@ -11,3 +11,4 @@ export { default as DexController } from './Dex';
 export { default as NftController } from './Nft';
 export { default as PobController } from './Pob';
 export { default as StateController } from './State';
+export { default as HiveController } from './Hive';

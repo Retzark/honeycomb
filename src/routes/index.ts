@@ -14,6 +14,7 @@ import {
   StatusController,
   UserController,
   StateController,
+  HiveController,
 } from '@src/controller';
 
 const router = express();
@@ -53,7 +54,9 @@ const {
   getPostAuthorPermlink,
   getPosts,
 } = PobController();
-const { getState } = StateController();
+const { getState, getPending, getWrap, getPic, getStateBlog } =
+  StateController();
+const { getHiveAPI } = HiveController();
 
 router.get('/', Start);
 router.get('/stats', getRoot);
@@ -103,13 +106,13 @@ router.get('/posts/:author/:permlink', featuresPob, getPostAuthorPermlink);
 router.get('/posts', featuresPob, getPosts); //votable posts
 
 router.get('/state', featuresState, getState); //Do not recommend having a state dump in a production API
-// router.get('/pending', featuresState, API.pending); // The transaction signer now can sign multiple actions per block and this is nearly always empty, still good for troubleshooting
-// // Some HIVE APi is wrapped here to support a stateless frontend built on the cheap with dreamweaver
-// // None of these functions are required for token functionality and should likely be removed from the community version
-// router.get('/api/:api_type/:api_call', featuresState, API.hive_api);
-// router.get('/hapi/:api_type/:api_call', featuresState, API.hive_api);
-// router.get('/getwrap', featuresState, API.getwrap);
-// router.get('/getauthorpic/:un', featuresState, API.getpic);
-// router.get('/getblog/:un', featuresState, API.getblog);
+router.get('/pending', featuresState, getPending); // The transaction signer now can sign multiple actions per block and this is nearly always empty, still good for troubleshooting
+// Some HIVE APi is wrapped here to support a stateless frontend built on the cheap with dreamweaver
+// None of these functions are required for token functionality and should likely be removed from the community version
+router.get('/api/:api_type/:api_call', featuresState, getHiveAPI);
+router.get('/hapi/:api_type/:api_call', featuresState, getHiveAPI);
+router.get('/getwrap', featuresState, getWrap);
+router.get('/getauthorpic/:un', featuresState, getPic);
+router.get('/getblog/:un', featuresState, getStateBlog);
 
 export default router;

@@ -15,3 +15,4 @@ export {
 export { Base64Utils } from './base64Utils';
 export { stateStart } from './State';
 export { default as authUtils } from './authUtils';
+export { default as nodeOpsUtils } from './nodeOps';
