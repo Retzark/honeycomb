@@ -1,4 +1,5 @@
-import { HiveService, PathService } from '@src/services';
+import { PathService } from '@src/services';
+import { Hive } from './../application';
 import {
   BlockArgs,
   PlasmaArgs,
@@ -121,7 +122,6 @@ export const Owners = {
   },
   init: () => {
     const { getPathObj } = PathService();
-    const { fetchAccounts } = HiveService();
 
     getPathObj(['stats', 'ms', 'active_account_auths']).then((auths: any) => {
       const q: string[] = [];
@@ -130,7 +130,7 @@ export const Owners = {
         q.push(key);
       }
 
-      fetchAccounts(q).then((r: any) => {
+      Hive.getAccounts(q).then((r: any) => {
         owners = {};
         for (let i = 0; i < r.length; i++) {
           owners[r[i].name] = { key: r[i].active.key_auths[0][0] };
