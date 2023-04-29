@@ -6,3 +6,4 @@ export { default as PathService } from './Path';
 export { default as DexService } from './Dex';
 export { default as NftService } from './Nft';
 export { default as PobService } from './Pob';
+export { default as ProcessorHiveService } from './Processor';
