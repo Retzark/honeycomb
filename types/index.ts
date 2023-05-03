@@ -43,7 +43,11 @@ export type UserResponse = {
 };
 
 export type ProcessArgs = {
-  processor: any;
+  client: any;
+  nextBlock: number;
+  prefix: string;
+  account: string;
+  vOpsRequired: boolean;
 };
 
 export type DexInfoArgs = {

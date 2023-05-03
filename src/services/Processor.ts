@@ -274,7 +274,7 @@ const ProcessorHive = (
       blocks.requests.last_range = blockNum;
       blocks.manage(blockNum);
     });
-    stream.on('end', function () {
+    stream.on('end', () => {
       console.error(
         'Block stream ended unexpectedly. Restarting block computing.'
       );
@@ -322,13 +322,12 @@ const ProcessorHive = (
               block_id: v[4].block_id,
               block_number: num,
             })
-              .then((r: any) => {
+              .then((_r: any) => {
                 pc[0](pc[2]);
               })
               .catch((e: any) => {
                 console.log(e);
               });
-            // }
           }
         })
         .catch((e) => {

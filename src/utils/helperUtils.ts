@@ -1,19 +1,13 @@
 import { PathService } from '@src/services';
 import { Hive } from './../application';
-import {
-  BlockArgs,
-  PlasmaArgs,
-  ProcessArgs,
-  RamArgs,
-  StartingBlockArgs,
-} from 'types';
+import { BlockArgs, PlasmaArgs, RamArgs, StartingBlockArgs } from 'types';
 import { store } from '..';
 
 export const status: any = {
   cleaner: [],
 };
 
-export let PROCCESS_STATE: ProcessArgs = {
+export let PROCCESS_STATE: { processor: any } = {
   processor: '',
 };
 
