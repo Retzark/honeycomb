@@ -42,6 +42,7 @@
     "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
+    "@types/bs58": "^4.0.1",
     "@types/bytewise": "^1.1.0",
     "@types/cors": "^2.8.13",
     "@types/decode-uri-component": "^0.2.0",

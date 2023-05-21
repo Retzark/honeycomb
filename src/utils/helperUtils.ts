@@ -1,7 +1,12 @@
+import stringify from 'json-stable-stringify';
+import crypto from 'crypto';
+import bs58 from 'bs58';
 import { PathService } from '@src/services';
 import { Hive } from './../application';
 import { BlockArgs, PlasmaArgs, RamArgs, StartingBlockArgs } from 'types';
 import { store } from '..';
+
+const hashFunction = Buffer.from('12', 'hex');
 
 export const status: any = {
   cleaner: [],
@@ -146,4 +151,30 @@ export const alphabeticShift = (inputString: string) => {
   }
 
   return newString.join('');
+};
+
+export const isEmpty = (obj: any) => {
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) return false;
+  }
+
+  return true;
+};
+
+export const chronAssign = (block: any, op: any) => {
+  return new Promise((resolve, reject) => {
+    const t = block + ':' + hashThis(stringify(op));
+    store.batch(
+      [{ type: 'put', path: ['chrono', t], data: op }],
+      [resolve, reject, t]
+    );
+  });
+};
+
+export const hashThis = (data: string) => {
+  const digest = crypto.createHash('sha256').update(data).digest();
+  const digestSize = Buffer.from(digest.byteLength.toString(16), 'hex');
+  const combined = Buffer.concat([hashFunction, digestSize, digest]);
+  const multihash = bs58.encode(combined);
+  return multihash.toString();
 };

@@ -1,7 +1,22 @@
 import { RootController } from '@src/controller';
 import { CONFIG, VERSION } from '@src/config';
-import { BLOCK, Owners, PLASMA, PROCCESS_STATE, RAM, STARTING_BLOCK, stateStart, TXIDUtils } from '@src/utils';
-import { IpfsService } from '@src/services';
+import {
+  BLOCK,
+  Owners,
+  PLASMA,
+  PROCCESS_STATE,
+  RAM,
+  STARTING_BLOCK,
+  stateStart,
+  TXIDUtils,
+} from '@src/utils';
+import {
+  IpfsService,
+  NodesService,
+  ProcessorHiveService,
+  ReportService,
+  StateSendService,
+} from '@src/services';
 import { client, ipfs, store } from '..';
 import { Hive } from '.';
 
@@ -16,6 +31,9 @@ const walletOperationsBitmask = makeBitMaskFilter([op.custom_json]);
 const AppStart = () => {
   const { Start } = RootController();
   const { ipfspromise, rundelta } = IpfsService();
+  const { Send, Claim } = StateSendService();
+  const { NodeAdd } = NodesService();
+  const { getReport } = ReportService();
 
   const dynStart = (account?: string) => {
     try {
@@ -67,9 +85,8 @@ const AppStart = () => {
         });
       });
     } catch (err) {
-      console.log("Error: ", err)
+      console.log('Error: ', err);
     }
-
   };
 
   const startWith = (hash: string, second: boolean) => {
@@ -132,10 +149,11 @@ const AppStart = () => {
           if (err) {
             console.log({ err });
           } else {
-            store.get(["stats", "hashLastIBlock"], function (error, returns) {
+            store.get(['stats', 'hashLastIBlock'], function (error, returns) {
               if (!error) {
                 console.log(
-                  `State Check:  ${returns}\nAccount: ${CONFIG.username
+                  `State Check:  ${returns}\nAccount: ${
+                    CONFIG.username
                   }\nKey: ${CONFIG.active.substr(0, 3)}...`
                 );
               }
@@ -150,29 +168,37 @@ const AppStart = () => {
 
   const startApp = () => {
     Owners.init();
-    TXIDUtils.blocknumber = 0
-    if (CONFIG.ipfshost == 'ipfs') ipfs.id((err: any, res: any) => {
-      if (err) { }
-      if (res) PLASMA.id = res.id
-    })
+    TXIDUtils.blocknumber = 0;
+    if (CONFIG.ipfshost == 'ipfs')
+      ipfs.id((err: any, res: any) => {
+        if (err) {
+        }
+        if (res) PLASMA.id = res.id;
+      });
 
-    // PROCCESS_STATE.processor = hiveState(client, STARTING_BLOCK.startingBlock, CONFIG.prefix, CONFIG.username);
-    // PROCCESS_STATE.processor.on('send', HR.send);
-    // PROCCESS_STATE.processor.on('claim', HR.claim);
-    // PROCCESS_STATE.processor.on('node_add', HR.node_add);
-  }
+    PROCCESS_STATE.processor = ProcessorHiveService(
+      client,
+      STARTING_BLOCK.startingBlock,
+      CONFIG.prefix,
+      CONFIG.username
+    );
+    PROCCESS_STATE.processor.on('send', Send);
+    PROCCESS_STATE.processor.on('claim', Claim);
+    PROCCESS_STATE.processor.on('node_add', NodeAdd);
+    PROCCESS_STATE.processor.on('report', getReport);
+  };
 
   const exitApp = (consensus: number, reason: string) => {
     console.log(`Restarting with ${consensus}. Reason: ${reason}`);
 
-    if (PROCCESS_STATE.processor) PROCCESS_STATE.processor.stop(function () { });
+    if (PROCCESS_STATE.processor) PROCCESS_STATE.processor.stop(function () {});
 
     if (consensus) {
       startWith(consensus as unknown as string, true);
     } else {
       dynStart(CONFIG.msaccount);
     }
-  }
+  };
 
   return { dynStart, startWith, exitApp };
 };

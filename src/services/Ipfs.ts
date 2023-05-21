@@ -8,6 +8,7 @@ import {
   unwrapOps,
 } from '@src/utils';
 import { store } from '..';
+import { ipfs } from '..';
 
 const IpfsService = () => {
   const ipfspromise = async (hash: string) => {
@@ -38,9 +39,8 @@ const IpfsService = () => {
               }
             });
         } catch (err) {
-          console.log("Error: ", err)
+          console.log('Error: ', err);
         }
-
       }
     });
   };
@@ -100,9 +100,22 @@ const IpfsService = () => {
     });
   };
 
+  const ipfsPeerConnect = async (peerid: string) => {
+    return new Promise((resolve, reject) => {
+      //ipfs.swarm.addrs().then((addrs) => {console.log(addrs)})
+      ipfs.swarm.connect(`/p2p/${peerid}`, (err: any, res: any) => {
+        if (res) resolve(res.Strings[0]);
+        if (err) {
+          resolve(`Failed to connect to${peerid}`);
+        }
+      });
+    });
+  };
+
   return {
     ipfspromise,
     rundelta,
+    ipfsPeerConnect,
   };
 };
 
